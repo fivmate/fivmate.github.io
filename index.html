@@ -14,7 +14,7 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            cursor: none
+            cursor: none;
         }
 
         :root {
@@ -27,6 +27,9 @@
             --text-dark: #AAAAAA;
             --glass: rgba(255, 255, 255, 0.1);
             --glass-border: rgba(255, 255, 255, 0.2);
+            --depth-1: 0px;
+            --depth-2: 0px;
+            --depth-3: 0px;
         }
 
         [data-theme="light"] {
@@ -72,6 +75,27 @@
             background-clip: text;
             color: transparent;
             margin-bottom: 20px;
+            position: relative;
+        }
+
+        .logo-drawing {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
+            animation: drawLogo 2s ease-in-out forwards;
+        }
+
+        @keyframes drawLogo {
+            to {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+            }
         }
 
         .loader-bar {
@@ -132,14 +156,14 @@
         /* Custom Cursor - Desktop Only */
         .cursor {
             position: fixed;
-            width: 20px;
-            height: 20px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: var(--primary);
             pointer-events: none;
             mix-blend-mode: difference;
             z-index: 10000;
-            transition: transform 0.1s, background 0.3s;
+            transition: transform 0.1s, background 0.3s, width 0.3s, height 0.3s;
         }
 
         .cursor-follower {
@@ -150,7 +174,25 @@
             border: 2px solid var(--secondary);
             pointer-events: none;
             z-index: 9999;
-            transition: transform 0.2s, opacity 0.3s;
+            transition: transform 0.2s, opacity 0.3s, width 0.3s, height 0.3s;
+        }
+
+        .cursor-ripple {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(138, 43, 226, 0.5);
+            pointer-events: none;
+            z-index: 9998;
+            animation: ripple 0.6s ease-out;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
         }
 
         /* Glass Morphism */
@@ -195,6 +237,7 @@
             background-clip: text;
             color: transparent;
             text-decoration: none;
+            position: relative;
         }
 
         .nav-links {
@@ -337,9 +380,84 @@
             border-radius: 2px;
         }
 
+        /* Glowing Line Divider */
+        .glowing-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
+            margin: 60px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glowing-divider::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            animation: glowMove 3s linear infinite;
+        }
+
+        @keyframes glowMove {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
+        }
+
+        /* Color Grade Preview Section */
+        .color-grade-section {
+            padding: 80px 20px;
+        }
+
+        .color-grade-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .video-preview {
+            width: 100%;
+            height: 400px;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .video-preview video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: filter 0.5s ease;
+        }
+
+        .color-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .color-btn {
+            padding: 12px 24px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .color-btn.active {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
         }
 
         /* Skills Section */
@@ -435,70 +553,6 @@
 
         .portfolio-item:hover .portfolio-overlay {
             transform: translateY(0);
-        }
-
-        /* Mobile Swipe Gallery */
-        .portfolio-mobile-swipe {
-            display: none;
-            position: relative;
-            overflow: hidden;
-            height: 300px;
-            border-radius: 20px;
-            margin: 20px 0;
-        }
-        
-        .swipe-track {
-            display: flex;
-            transition: transform 0.3s ease;
-            height: 100%;
-        }
-        
-        .swipe-slide {
-            min-width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            flex-direction: column;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .swipe-slide i {
-            font-size: 60px;
-            margin-bottom: 15px;
-            color: rgba(255, 255, 255, 0.9);
-        }
-        
-        .swipe-slide h3 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-        
-        .swipe-slide p {
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .swipe-dots {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .swipe-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--text-dark);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .swipe-dot.active {
-            background: var(--primary);
-            transform: scale(1.2);
         }
 
         /* Timeline Section */
@@ -628,6 +682,76 @@
         .copyright {
             color: var(--text-dark);
             font-size: 0.9rem;
+        }
+
+        /* Fiverr Orb */
+        .fiverr-orb {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(45deg, #1dbf73, #1dbf73);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(29, 191, 115, 0.4);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+        }
+
+        .fiverr-orb::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .fiverr-orb:hover::before {
+            transform: translateX(100%);
+        }
+
+        .fiverr-orb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(29, 191, 115, 0.6);
+        }
+
+        .fiverr-orb.expanded {
+            width: 200px;
+            border-radius: 50px;
+            padding: 0 20px;
+        }
+
+        .fiverr-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease 0.1s;
+        }
+
+        .fiverr-orb.expanded .fiverr-content {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .fiverr-text {
+            color: white;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .fiverr-icon {
+            color: white;
+            font-size: 1.5rem;
+            min-width: 30px;
         }
 
         /* AI Assistant */
@@ -761,6 +885,83 @@
             100% { transform: scale(1); }
         }
 
+        /* Motion Navigation */
+        .motion-nav {
+            position: fixed;
+            top: 50%;
+            right: 30px;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 500;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--text-dark);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-dot.active {
+            background: var(--primary);
+            transform: scale(1.3);
+        }
+
+        .nav-dot::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(138, 43, 226, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .nav-dot.active::after {
+            width: 30px;
+            height: 30px;
+        }
+
+        /* Sound Toggle */
+        .sound-toggle {
+            position: fixed;
+            bottom: 30px;
+            left: 120px;
+            width: 50px;
+            height: 50px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .sound-toggle:hover {
+            background: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .sound-toggle i {
+            font-size: 1.2rem;
+            color: var(--text);
+        }
+
+        .sound-toggle.muted i {
+            color: var(--accent);
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             /* Disable cursor on mobile */
@@ -773,6 +974,14 @@
             }
             
             #three-canvas {
+                display: none;
+            }
+
+            .motion-nav {
+                display: none;
+            }
+
+            .sound-toggle {
                 display: none;
             }
             
@@ -843,6 +1052,20 @@
                 margin-bottom: 40px;
             }
             
+            /* Color Grade Section */
+            .video-preview {
+                height: 250px;
+            }
+            
+            .color-controls {
+                gap: 10px;
+            }
+            
+            .color-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
             /* Skills */
             .skills-grid {
                 grid-template-columns: 1fr;
@@ -854,13 +1077,9 @@
                 padding: 25px;
             }
             
-            /* Portfolio - Show mobile swipe, hide grid */
+            /* Portfolio */
             .portfolio-grid {
                 display: none;
-            }
-            
-            .portfolio-mobile-swipe {
-                display: block;
             }
             
             .portfolio-item {
@@ -890,6 +1109,18 @@
             
             .contact-form {
                 padding: 25px;
+            }
+            
+            /* Fiverr Orb */
+            .fiverr-orb {
+                bottom: 20px;
+                left: 20px;
+                width: 60px;
+                height: 60px;
+            }
+            
+            .fiverr-orb.expanded {
+                width: 180px;
             }
             
             /* AI Assistant */
@@ -950,12 +1181,17 @@
                 font-size: 2.5rem;
             }
             
-            .swipe-slide i {
-                font-size: 50px;
+            .video-preview {
+                height: 200px;
             }
             
-            .swipe-slide h3 {
-                font-size: 1.3rem;
+            .fiverr-orb {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .fiverr-orb.expanded {
+                width: 160px;
             }
         }
     </style>
@@ -964,7 +1200,9 @@
     <!-- Loader -->
     <div class="loader">
         <div class="loader-content">
-            <div class="loader-text">FIVMATE</div>
+            <div class="loader-text">FIVMATE
+                <div class="logo-drawing">FIVMATE</div>
+            </div>
             <div class="loader-bar"></div>
         </div>
     </div>
@@ -979,12 +1217,28 @@
     <div class="cursor"></div>
     <div class="cursor-follower"></div>
     
+    <!-- Motion Navigation Dots -->
+    <div class="motion-nav">
+        <div class="nav-dot active" data-section="home"></div>
+        <div class="nav-dot" data-section="color-grade"></div>
+        <div class="nav-dot" data-section="skills"></div>
+        <div class="nav-dot" data-section="portfolio"></div>
+        <div class="nav-dot" data-section="timeline"></div>
+        <div class="nav-dot" data-section="contact"></div>
+    </div>
+
+    <!-- Sound Toggle -->
+    <div class="sound-toggle" id="soundToggle">
+        <i class="fas fa-volume-up"></i>
+    </div>
+    
     <!-- Header -->
     <header>
         <nav>
             <a href="#" class="logo">FIVMATE</a>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
+                <li><a href="#color-grade">Color Lab</a></li>
                 <li><a href="#skills">Skills</a></li>
                 <li><a href="#portfolio">Portfolio</a></li>
                 <li><a href="#timeline">Journey</a></li>
@@ -1007,6 +1261,35 @@
             <a href="#portfolio" class="btn">View My Work</a>
         </div>
     </section>
+
+    <!-- Glowing Line Divider -->
+    <div class="glowing-divider"></div>
+    
+    <!-- Color Grade Preview Section -->
+    <section id="color-grade" class="color-grade-section">
+        <div class="container">
+            <h2 class="section-title">Color Lab</h2>
+            <div class="color-grade-container">
+                <div class="video-preview glass">
+                    <video id="colorPreview" loop muted>
+                        <source src="https://assets.mixkit.co/videos/preview/mixkit-going-down-a-curved-highway-through-a-mountain-range-41576-large.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="color-controls">
+                    <button class="color-btn active" data-filter="original">Original</button>
+                    <button class="color-btn" data-filter="cinematic">Cinematic</button>
+                    <button class="color-btn" data-filter="vintage">Vintage</button>
+                    <button class="color-btn" data-filter="dramatic">Dramatic</button>
+                    <button class="color-btn" data-filter="cool">Cool Tone</button>
+                    <button class="color-btn" data-filter="warm">Warm Tone</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Glowing Line Divider -->
+    <div class="glowing-divider"></div>
     
     <!-- Skills Section -->
     <section id="skills">
@@ -1046,13 +1329,14 @@
             </div>
         </div>
     </section>
+
+    <!-- Glowing Line Divider -->
+    <div class="glowing-divider"></div>
     
     <!-- Portfolio Section -->
     <section id="portfolio">
         <div class="container">
             <h2 class="section-title">My Portfolio</h2>
-            
-            <!-- Desktop Portfolio Grid -->
             <div class="portfolio-grid">
                 <div class="portfolio-item glass">
                     <div class="portfolio-img">
@@ -1082,34 +1366,11 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Mobile Swipe Gallery -->
-            <div class="portfolio-mobile-swipe glass">
-                <div class="swipe-track">
-                    <div class="swipe-slide">
-                        <i class="fas fa-film"></i>
-                        <h3>Commercial Ad</h3>
-                        <p>60-second commercial for fashion brand</p>
-                    </div>
-                    <div class="swipe-slide">
-                        <i class="fas fa-music"></i>
-                        <h3>Music Video</h3>
-                        <p>High-energy music video for emerging artist</p>
-                    </div>
-                    <div class="swipe-slide">
-                        <i class="fas fa-video"></i>
-                        <h3>Documentary</h3>
-                        <p>Short documentary on environmental issues</p>
-                    </div>
-                </div>
-                <div class="swipe-dots">
-                    <div class="swipe-dot active"></div>
-                    <div class="swipe-dot"></div>
-                    <div class="swipe-dot"></div>
-                </div>
-            </div>
         </div>
     </section>
+
+    <!-- Glowing Line Divider -->
+    <div class="glowing-divider"></div>
     
     <!-- Timeline Section -->
     <section id="timeline">
@@ -1147,6 +1408,9 @@
             </div>
         </div>
     </section>
+
+    <!-- Glowing Line Divider -->
+    <div class="glowing-divider"></div>
     
     <!-- Contact Section -->
     <section id="contact">
@@ -1196,7 +1460,7 @@
     <footer>
         <div class="container">
             <div class="social-links">
-                <a href="#" class="social-link"><i class="fab fa-fiverr"></i></a>
+                <a href="https://www.fiverr.com/fivmate" class="social-link"><i class="fab fa-fiverr"></i></a>
                 <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
                 <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
                 <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
@@ -1204,6 +1468,16 @@
             <p class="copyright">© 2023 FIVMATE. All Rights Reserved.</p>
         </div>
     </footer>
+    
+    <!-- Fiverr Orb -->
+    <div class="fiverr-orb" id="fiverrOrb">
+        <div class="fiverr-content">
+            <div class="fiverr-icon">
+                <i class="fab fa-fiverr"></i>
+            </div>
+            <div class="fiverr-text">Book Now</div>
+        </div>
+    </div>
     
     <!-- AI Assistant -->
     <div class="ai-assistant">
@@ -1227,17 +1501,116 @@
     </div>
 
     <script>
+        // Sound Manager
+        class SoundManager {
+            constructor() {
+                this.sounds = {};
+                this.enabled = true;
+                this.audioContext = null;
+                
+                // Initialize audio context on first user interaction
+                document.addEventListener('click', this.initAudioContext.bind(this), { once: true });
+            }
+            
+            initAudioContext() {
+                if (!this.audioContext) {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            }
+            
+            createSound(frequency, duration, type = 'sine', volume = 0.1) {
+                return () => {
+                    if (!this.enabled || !this.audioContext) return;
+                    
+                    const oscillator = this.audioContext.createOscillator();
+                    const gainNode = this.audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(this.audioContext.destination);
+                    
+                    oscillator.frequency.value = frequency;
+                    oscillator.type = type;
+                    
+                    gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+                    gainNode.gain.linearRampToValueAtTime(volume, this.audioContext.currentTime + 0.01);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + duration);
+                    
+                    oscillator.start(this.audioContext.currentTime);
+                    oscillator.stop(this.audioContext.currentTime + duration);
+                };
+            }
+            
+            playHoverSound() {
+                this.createSound(800, 0.1, 'sine', 0.05)();
+            }
+            
+            playClickSound() {
+                this.createSound(600, 0.1, 'sine', 0.08)();
+            }
+            
+            playSuccessSound() {
+                this.createSound(1000, 0.3, 'sine', 0.1)();
+            }
+            
+            playTransitionSound() {
+                this.createSound(400, 0.5, 'triangle', 0.06)();
+            }
+            
+            playWhooshSound() {
+                const now = this.audioContext.currentTime;
+                const oscillator = this.audioContext.createOscillator();
+                const gainNode = this.audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(this.audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(800, now);
+                oscillator.frequency.exponentialRampToValueAtTime(200, now + 0.3);
+                
+                gainNode.gain.setValueAtTime(0.1, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                
+                oscillator.start(now);
+                oscillator.stop(now + 0.3);
+            }
+            
+            toggle() {
+                this.enabled = !this.enabled;
+                return this.enabled;
+            }
+        }
+
         // Initialize GSAP ScrollTrigger
         gsap.registerPlugin(ScrollTrigger);
         
-        // Loader
+        // Initialize Sound Manager
+        const soundManager = new SoundManager();
+        
+        // Sound Toggle
+        const soundToggle = document.getElementById('soundToggle');
+        soundToggle.addEventListener('click', () => {
+            const enabled = soundManager.toggle();
+            soundToggle.classList.toggle('muted', !enabled);
+            soundToggle.querySelector('i').className = enabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
+            
+            // Play feedback sound
+            if (enabled) {
+                soundManager.createSound(600, 0.1, 'sine', 0.1)();
+            }
+        });
+
+        // Loader with Logo Drawing Animation
         window.addEventListener('load', () => {
             setTimeout(() => {
                 document.querySelector('.loader').classList.add('hidden');
+                // Start video after loader
+                document.getElementById('colorPreview').play();
+                // Play transition sound
+                setTimeout(() => soundManager.playTransitionSound(), 500);
             }, 2000);
         });
 
-        // Theme Toggle
+        // Theme Toggle with Sound
         const themeToggle = document.querySelector('.theme-toggle');
         const themeIcon = themeToggle.querySelector('i');
         
@@ -1249,9 +1622,11 @@
             themeIcon.className = document.body.getAttribute('data-theme') === 'light' 
                 ? 'fas fa-sun' 
                 : 'fas fa-moon';
+            
+            soundManager.playClickSound();
         });
         
-        // Custom Cursor - Desktop Only
+        // Enhanced Custom Cursor with Sounds - Desktop Only
         if (window.innerWidth > 768) {
             const cursor = document.querySelector('.cursor');
             const cursorFollower = document.querySelector('.cursor-follower');
@@ -1272,21 +1647,61 @@
                 });
             });
             
-            // Interactive cursor effects
-            const interactiveElements = document.querySelectorAll('a, button, .portfolio-item, .skill-card');
+            // Interactive cursor effects with magnetic hover and sounds
+            const interactiveElements = document.querySelectorAll('a, button, .portfolio-item, .skill-card, .color-btn, .fiverr-orb, .ai-assistant, .social-link');
             
             interactiveElements.forEach(el => {
+                let hasPlayedHoverSound = false;
+                
                 el.addEventListener('mouseenter', () => {
                     cursor.style.transform = 'scale(1.5)';
                     cursor.style.background = 'var(--accent)';
                     cursorFollower.style.transform = 'scale(1.2)';
+                    cursorFollower.style.borderColor = 'var(--accent)';
+                    
+                    // Play hover sound only once per element
+                    if (!hasPlayedHoverSound) {
+                        soundManager.playHoverSound();
+                        hasPlayedHoverSound = true;
+                    }
+                    
+                    // Magnetic effect
+                    const rect = el.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    
+                    gsap.to(cursorFollower, {
+                        x: centerX - 20,
+                        y: centerY - 20,
+                        duration: 0.3
+                    });
                 });
                 
                 el.addEventListener('mouseleave', () => {
                     cursor.style.transform = 'scale(1)';
                     cursor.style.background = 'var(--primary)';
                     cursorFollower.style.transform = 'scale(1)';
+                    cursorFollower.style.borderColor = 'var(--secondary)';
+                    hasPlayedHoverSound = false;
                 });
+                
+                // Click sound for interactive elements
+                el.addEventListener('click', () => {
+                    soundManager.playClickSound();
+                });
+            });
+            
+            // Click ripple effect with sound
+            document.addEventListener('click', (e) => {
+                const ripple = document.createElement('div');
+                ripple.className = 'cursor-ripple';
+                ripple.style.left = e.clientX - 10 + 'px';
+                ripple.style.top = e.clientY - 10 + 'px';
+                document.body.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
             });
         }
         
@@ -1300,7 +1715,7 @@
             }
         });
 
-        // Mobile Menu Toggle
+        // Mobile Menu Toggle with Sound
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
         const navLinks = document.querySelector('.nav-links');
         
@@ -1308,6 +1723,7 @@
             e.stopPropagation();
             navLinks.classList.toggle('active');
             document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+            soundManager.playClickSound();
         });
 
         // Close menu when tapping outside
@@ -1318,15 +1734,16 @@
             }
         });
 
-        // Close menu when tapping links
+        // Close menu when tapping links with sound
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
                 document.body.style.overflow = '';
+                soundManager.playWhooshSound();
             });
         });
 
-        // Smooth scroll for navigation links
+        // Smooth scroll for navigation links with sound
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -1340,6 +1757,48 @@
                     // Close mobile menu if open
                     navLinks.classList.remove('active');
                     document.body.style.overflow = '';
+                    
+                    // Play transition sound
+                    soundManager.playWhooshSound();
+                }
+            });
+        });
+        
+        // Motion Navigation with Sounds
+        const navDots = document.querySelectorAll('.nav-dot');
+        const sections = document.querySelectorAll('section');
+        
+        function updateActiveNav() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navDots.forEach(dot => {
+                dot.classList.remove('active');
+                if (dot.getAttribute('data-section') === current) {
+                    dot.classList.add('active');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', updateActiveNav);
+        
+        // Click navigation for dots with sound
+        navDots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const sectionId = dot.getAttribute('data-section');
+                const targetSection = document.getElementById(sectionId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    soundManager.playWhooshSound();
                 }
             });
         });
@@ -1366,6 +1825,35 @@
             delay: 1.1
         });
         
+        // Color Grade Preview with Sounds
+        const colorBtns = document.querySelectorAll('.color-btn');
+        const videoPreview = document.getElementById('colorPreview');
+        
+        const colorFilters = {
+            original: 'none',
+            cinematic: 'contrast(1.2) saturate(1.1) brightness(0.9)',
+            vintage: 'sepia(0.5) contrast(1.1) brightness(1.05)',
+            dramatic: 'contrast(1.3) brightness(0.85) saturate(1.2)',
+            cool: 'hue-rotate(180deg) saturate(0.8) contrast(1.1)',
+            warm: 'hue-rotate(-20deg) saturate(1.2) brightness(1.05)'
+        };
+        
+        colorBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons
+                colorBtns.forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                btn.classList.add('active');
+                
+                // Apply filter to video
+                const filter = colorFilters[btn.getAttribute('data-filter')];
+                videoPreview.style.filter = filter;
+                
+                // Play click sound
+                soundManager.playClickSound();
+            });
+        });
+        
         // Skill bars animation
         gsap.utils.toArray('.skill-progress').forEach(bar => {
             gsap.to(bar, {
@@ -1376,6 +1864,9 @@
                     start: 'top 80%',
                     end: 'bottom 20%',
                     toggleActions: 'play none none none'
+                },
+                onComplete: () => {
+                    soundManager.playSuccessSound();
                 }
             });
         });
@@ -1410,7 +1901,28 @@
             });
         });
         
-        // AI Assistant - Complete Implementation
+        // Fiverr Orb with Sounds
+        const fiverrOrb = document.getElementById('fiverrOrb');
+        let orbExpandTimeout;
+        
+        fiverrOrb.addEventListener('mouseenter', () => {
+            clearTimeout(orbExpandTimeout);
+            fiverrOrb.classList.add('expanded');
+            soundManager.playHoverSound();
+        });
+        
+        fiverrOrb.addEventListener('mouseleave', () => {
+            orbExpandTimeout = setTimeout(() => {
+                fiverrOrb.classList.remove('expanded');
+            }, 300);
+        });
+        
+        fiverrOrb.addEventListener('click', () => {
+            window.open('https://www.fiverr.com/fivmate', '_blank');
+            soundManager.playSuccessSound();
+        });
+        
+        // AI Assistant with Sounds
         const aiAssistant = document.querySelector('.ai-assistant');
         const aiChat = document.querySelector('.ai-chat');
         const chatInput = document.querySelector('#chatInput');
@@ -1423,6 +1935,11 @@
             messageDiv.innerHTML = `<p>${text}</p>`;
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Play sound for AI messages
+            if (isAI) {
+                soundManager.createSound(300, 0.2, 'sine', 0.05)();
+            }
         }
 
         function handleAIResponse(userInput) {
@@ -1433,7 +1950,7 @@
                 'premiere pro': 'I specialize in Adobe Premiere Pro for cutting, color grading, and audio synchronization! Perfect for YouTube videos and commercials.',
                 'after effects': 'I create stunning motion graphics and visual effects using After Effects! Titles, animations, and special effects are my specialty.',
                 'portfolio': 'Check out my portfolio section above to see my latest work! I\'ve done commercials, music videos, and documentaries.',
-                'contact': 'You can reach me at contact@fivmate.com or use the contact form! I usually reply within 24 hours.',
+                'contact': 'You can reach me at farhansadik.fiv@gmail.com or use the contact form! I usually reply within 24 hours.',
                 'service': 'I offer video editing, color grading, motion graphics, and audio mixing. What type of project do you have?',
                 'time': 'Most projects take 2-5 days depending on complexity. Rush delivery is available for an extra fee!',
                 'default': 'I specialize in video editing with Premiere Pro and After Effects. You can ask me about pricing, services, or my portfolio!'
@@ -1458,6 +1975,7 @@
             if (aiChat.classList.contains('active')) {
                 chatInput.focus();
             }
+            soundManager.playClickSound();
         });
 
         sendButton.addEventListener('click', () => {
@@ -1466,6 +1984,7 @@
                 addMessage(message, false);
                 handleAIResponse(message);
                 chatInput.value = '';
+                soundManager.playClickSound();
             }
         });
 
@@ -1475,96 +1994,51 @@
             }
         });
 
-        // Contact Form Submission
-document.getElementById('contactForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    // Get form data
-    const formData = new FormData(this);
-    
-    // Show loading state
-    const submitBtn = this.querySelector('.btn');
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-    submitBtn.disabled = true;
-    
-    // Send to Formspree
-    fetch(this.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'Accept': 'application/json'
-        }
-    })
-    .then(response => {
-        if (response.ok) {
-            alert('🎉 Thank you! Your message has been sent successfully!');
-            this.reset();
-        } else {
-            throw new Error('Form submission failed');
-        }
-    })
-    .catch(error => {
-        alert('❌ Sorry, there was an error sending your message. Please try again or email me directly.');
-    })
-    .finally(() => {
-        // Reset button
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-    });
-});
-        
-        // Mobile Swipe Gallery Functionality
-        function initSwipeGallery() {
-            const track = document.querySelector('.swipe-track');
-            const slides = document.querySelectorAll('.swipe-slide');
-            const dots = document.querySelectorAll('.swipe-dot');
-            let currentIndex = 0;
+        // Contact Form Submission with Sound
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            function updateSlide(index) {
-                track.style.transform = `translateX(-${index * 100}%)`;
-                dots.forEach((dot, i) => {
-                    dot.classList.toggle('active', i === index);
-                });
-                currentIndex = index;
-            }
+            // Get form data
+            const formData = new FormData(this);
             
-            // Touch swipe detection
-            let startX = 0;
-            let currentX = 0;
+            // Show loading state
+            const submitBtn = this.querySelector('.btn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            submitBtn.disabled = true;
             
-            track.addEventListener('touchstart', (e) => {
-                startX = e.touches[0].clientX;
-            });
+            // Play sending sound
+            soundManager.playTransitionSound();
             
-            track.addEventListener('touchmove', (e) => {
-                currentX = e.touches[0].clientX;
-            });
-            
-            track.addEventListener('touchend', () => {
-                const diff = startX - currentX;
-                const threshold = 50;
-                
-                if (Math.abs(diff) > threshold) {
-                    if (diff > 0 && currentIndex < slides.length - 1) {
-                        // Swipe left - next slide
-                        updateSlide(currentIndex + 1);
-                    } else if (diff < 0 && currentIndex > 0) {
-                        // Swipe right - previous slide
-                        updateSlide(currentIndex - 1);
-                    }
+            // Send to Formspree
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
                 }
+            })
+            .then(response => {
+                if (response.ok) {
+                    soundManager.playSuccessSound();
+                    alert('🎉 Thank you! Your message has been sent successfully!');
+                    this.reset();
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            })
+            .catch(error => {
+                soundManager.createSound(200, 0.3, 'sawtooth', 0.1)();
+                alert('❌ Sorry, there was an error sending your message. Please try again or email me directly.');
+            })
+            .finally(() => {
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
             });
-            
-            // Dot click navigation
-            dots.forEach((dot, index) => {
-                dot.addEventListener('click', () => {
-                    updateSlide(index);
-                });
-            });
-        }
+        });
 
-        // Shake Detection for Theme Shuffling
+        // Shake Detection for Theme Shuffling with Sound
         function initShakeDetection() {
             const themes = [
                 { primary: '#8A2BE2', secondary: '#00CED1' }, // Original
@@ -1607,6 +2081,9 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
                 document.documentElement.style.setProperty('--primary', theme.primary);
                 document.documentElement.style.setProperty('--secondary', theme.secondary);
                 
+                // Play theme change sound
+                soundManager.playWhooshSound();
+                
                 // Show shake indicator
                 const indicator = document.querySelector('.shake-indicator');
                 indicator.classList.add('show');
@@ -1629,23 +2106,6 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
             }
         }
 
-        // Touch Feedback
-        function initTouchFeedback() {
-            const touchElements = document.querySelectorAll('.btn, .portfolio-item, .skill-card, .social-link, .nav-links a');
-            
-            touchElements.forEach(element => {
-                element.addEventListener('touchstart', function() {
-                    this.classList.add('touch-feedback');
-                });
-                
-                element.addEventListener('touchend', function() {
-                    setTimeout(() => {
-                        this.classList.remove('touch-feedback');
-                    }, 300);
-                });
-            });
-        }
-
         // Initialize mobile features
         function initMobileFeatures() {
             if (window.innerWidth < 768) {
@@ -1656,9 +2116,7 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
                 if (cursorFollower) cursorFollower.remove();
                 
                 // Initialize mobile features
-                initSwipeGallery();
                 initShakeDetection();
-                initTouchFeedback();
                 
                 // Disable 3D background
                 const canvas = document.getElementById('three-canvas');
@@ -1741,6 +2199,9 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
                 !e.target.isContentEditable &&
                 window.innerWidth > 768) {
                 e.preventDefault();
+                
+                // Play spacebar sound
+                soundManager.playWhooshSound();
                 
                 // Create particle explosion
                 for (let i = 0; i < 50; i++) {
