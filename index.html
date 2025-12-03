@@ -100,6 +100,12 @@
             margin-bottom: 20px;
             position: relative;
         }
+.portfolio-img video {
+    width: 100%;          /* makes video fill the container width */
+    height: 100%;         /* makes video fill the container height */
+    object-fit: cover;    /* crops video to fit nicely without distortion */
+    border-radius: 12px;  /* optional: matches your glass/card rounded corners */
+}
 
         .logo-drawing {
             position: absolute;
@@ -1232,7 +1238,10 @@
             <div class="portfolio-grid">
                 <div class="portfolio-item glass">
                     <div class="portfolio-img">
-                        <i class="fas fa-film"></i>
+                        <video controls width="100%">
+        <source src="FINAL GIG VID 30 FPS.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
                     </div>
                     <div class="portfolio-overlay">
                         <h3>Commercial Ad</h3>
@@ -1911,4 +1920,5 @@
     </script>
 </body>
 </html>
+
 
